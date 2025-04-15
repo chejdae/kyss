@@ -1,20 +1,17 @@
 import { useState } from 'react';
+import { format } from 'date-fns';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 export default function Home() {
   const [name, setName] = useState('');
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  const [selected, setSelected] = useState();
   const [result, setResult] = useState(null);
-
-  const years = Array.from({ length: 101 }, (_, i) => 1930 + i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!year || !month || !day) return alert('생년월일을 모두 선택해주세요.');
-    const birth = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    if (!selected) return alert('날짜를 선택해주세요.');
+    const birth = format(selected, 'yyyy-MM-dd');
     const res = await fetch(`/api/get-ilju?birth=${birth}`);
     const data = await res.json();
     setResult({ ...data, name });
@@ -30,29 +27,17 @@ export default function Home() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          style={{ padding: '0.5rem', marginBottom: '0.5rem', display: 'block' }}
+          style={{ padding: '0.5rem', marginBottom: '1rem', display: 'block' }}
         />
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <select value={year} onChange={(e) => setYear(e.target.value)} required>
-            <option value="">년도</option>
-            {years.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-          <select value={month} onChange={(e) => setMonth(e.target.value)} required>
-            <option value="">월</option>
-            {months.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-          <select value={day} onChange={(e) => setDay(e.target.value)} required>
-            <option value="">일</option>
-            {days.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>확인</button>
+        <DayPicker
+          mode="single"
+          selected={selected}
+          onSelect={setSelected}
+          captionLayout="dropdown"
+          fromYear={1930}
+          toYear={2030}
+        />
+        <button type="submit" style={{ padding: '0.5rem 1rem', marginTop: '1rem' }}>확인</button>
       </form>
 
       {result && (
