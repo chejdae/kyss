@@ -42,7 +42,10 @@ export default function Home() {
           <p style={{ marginTop: '1rem' }}>{result.compatibilityNote}</p>
           <ul>
             {result.matches?.map((m, i) => (
-              <li key={i}>{m.ilju} - {m.name}</li>
+              <li key={i} style={{ marginBottom: '0.75rem' }}>
+                <strong>{m.ilju} - {m.name}</strong><br />
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>{m.description}</span>
+              </li>
             ))}
           </ul>
         </div>
