@@ -10,7 +10,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selected) return alert('날짜를 선택해주세요.');
+    if (!selected) return alert('생년월일을 선택해주세요.');
     const birth = format(selected, 'yyyy-MM-dd');
     const res = await fetch(`/api/get-ilju?birth=${birth}`);
     const data = await res.json();
