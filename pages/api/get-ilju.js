@@ -14,6 +14,17 @@ export default function handler(req, res) {
   const index = (days % 60 + 60) % 60;
   const ilju = ganjiList[index];
   const data = iljuAnimalDB[ilju];
+
   if (!data) return res.status(404).json({ error: 'No match', ilju });
-  res.status(200).json({ ilju, ...data });
+
+  const matches = data.matches.map((m) => ({
+    ...m,
+    name: iljuAnimalDB[m.ilju]?.name || ''
+  }));
+
+  res.status(200).json({
+    ilju,
+    ...data,
+    matches
+  });
 }
