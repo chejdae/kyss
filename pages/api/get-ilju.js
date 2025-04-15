@@ -17,10 +17,14 @@ export default function handler(req, res) {
 
   if (!data) return res.status(404).json({ error: 'No match', ilju });
 
-  const matches = data.matches.map((m) => ({
-    ...m,
-    name: iljuAnimalDB[m.ilju]?.name || ''
-  }));
+  const matches = data.matches.map((m) => {
+    const matchData = iljuAnimalDB[m.ilju];
+    return {
+      ...m,
+      name: matchData?.name || '',
+      description: matchData?.description || ''
+    };
+  });
 
   res.status(200).json({
     ilju,
